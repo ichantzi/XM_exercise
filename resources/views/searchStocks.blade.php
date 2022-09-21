@@ -17,7 +17,7 @@
     <div class="container mt-4">
         <div class="card">
             <div class="card-header text-center font-weight-bold">
-            Add your search parameters
+                Add your search parameters
             </div>
             <div class="card-body">
                 <form name="post-form" id="post-form" method="post" action="{{url('search-stocks')}}">
@@ -59,7 +59,7 @@
     @endif
     <script type="text/javascript">
     $('.date').datepicker({  
-       format: 'dd/mm/yyyy'
+       format: 'mm/dd/yyyy'
      });  
 </script> 
 </body>

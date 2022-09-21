@@ -19,21 +19,24 @@ class StockController extends Controller
         $validated = $request->validate([
             'symbol' => 'required',
             'email' => 'required|email',
-            'start_date' => 'required|date_format:d/m/Y|before_or_equal:end_date|before_or_equal:today',
-            'end_date' => 'required|date_format:d/m/Y|after_or_equal:start_date|before_or_equal:today',
+            'start_date' => 'required|date_format:m/d/Y|before_or_equal:end_date|before_or_equal:today',
+            'end_date' => 'required|date_format:m/d/Y|after_or_equal:start_date|before_or_equal:today',
         ]);
         
         $query = $request->all();
-        // dd($query['end_date']);
-        // dd(strtotime($query['start_date']));
-        $this->getResults($query);
+       
+        return redirect()->route('results',['query' => $query]);
     }
     
-    public function getResults($query)
+    public function getResults(Request $request)
     {
-        // dd($query);
         $client = new Client();
-        $url = "https://yh-finance.p.rapidapi.com/stock/v3/get-historical-data";
+        
+        $url = env('RAPID_API_URL');
+        
+        $query = $request->all()['query'];
+        $start_date = strtotime($query['start_date']);
+        $end_date = strtotime($query['end_date']);
         
         $headers = [
             'rapidapi-key' => env('RAPID_API_KEY')
@@ -46,9 +49,15 @@ class StockController extends Controller
         ]);
 
         $results = json_decode($response->getBody());
-        $prices = $results->prices;
         
-        // dd($prices[0]);
-        return view('stockResults', ['prices' => $prices]);
+        $temp_prices = $results->prices;
+        $prices= [];
+        foreach ($temp_prices as $temp_price) {
+            if ($temp_price->date >= $start_date && $temp_price->date <= $end_date) {
+                array_push($prices, $temp_price);
+            }
+        }
+        
+        return view('stockResults', ['prices' => $prices, 'symbol' => $query['symbol']]);
     }
 }

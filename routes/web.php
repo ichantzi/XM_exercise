@@ -18,5 +18,5 @@ use App\Http\Controllers\StockController;
 Route::get('/', [StockController::class, 'loadSearchForm']);
 
 
-Route::get('results', [StockController::class, 'getResults']);
+Route::get('results', [StockController::class, 'getResults'])->name('results');
 Route::post('search-stocks', [StockController::class, 'searchStocks']);
