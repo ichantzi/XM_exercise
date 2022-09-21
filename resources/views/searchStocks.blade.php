@@ -31,27 +31,36 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="stockSearchForm">From</label>
-                        <input class="date form-control" type="text" required="">
+                        <label for="stockSearchForm">Start Date</label>
+                        <input id="start_date" name="start_date" class="date form-control" type="text" required="">
                     </div>
                     <div class="form-group">
-                        <label for="stockSearchForm">To</label>
-                        <input class="date form-control" type="text" required="">
+                        <label for="stockSearchForm">End Date</label>
+                        <input id="end_date" name="end_date" class="date form-control" type="text" required="">
                     </div>
                     <div class="form-group">
                         <label for="stockSearchForm">Email</label>
-                        <input type="text" id="email" name="email" class="form-control" required="">
+                        <input type="text" id="email" name="email" class="form-control" required="email">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
     </div>  
-
+    
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <script type="text/javascript">
-        $('.date').datepicker({  
-        format: 'mm-dd-yyyy'
-        });  
-    </script>
+    $('.date').datepicker({  
+       format: 'dd/mm/yyyy'
+     });  
+</script> 
 </body>
 </html>

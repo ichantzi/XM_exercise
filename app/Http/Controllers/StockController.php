@@ -15,19 +15,28 @@ class StockController extends Controller
     }
 
     public function searchStocks(Request $request) {
-        dd($request->all());
+        
+        $validated = $request->validate([
+            'symbol' => 'required',
+            'email' => 'required|email',
+            'start_date' => 'required|date_format:d/m/Y|before_or_equal:end_date|before_or_equal:today',
+            'end_date' => 'required|date_format:d/m/Y|after_or_equal:start_date|before_or_equal:today',
+        ]);
+        
+        $query = $request->all();
+        // dd($query['end_date']);
+        // dd(strtotime($query['start_date']));
+        $this->getResults($query);
     }
     
-    public function getResults(Request $request)
+    public function getResults($query)
     {
+        // dd($query);
         $client = new Client();
         $url = "https://yh-finance.p.rapidapi.com/stock/v3/get-historical-data";
-        $query = [
-            'symbol' => 'AAIT',
-            'region' => 'US'
-        ];
+        
         $headers = [
-            'rapidapi-key' => '0dca73c515msh037b7c2e3907972p1356b7jsnd1b4383f841d'
+            'rapidapi-key' => env('RAPID_API_KEY')
         ];
 
         $response = $client->request('GET', $url, [
